@@ -49,11 +49,11 @@ export const login = async (req, res) => {
         message: "All fields are required"
       });
     }
-    console.log("Data : " + email + " " + password )
+    // console.log("Data : " + email + " " + password )
     const user = await User.findOne({ email: email });
     if (user) {
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
-      console.log(isPasswordCorrect, user)
+      // console.log(isPasswordCorrect, user)
       
       if (!isPasswordCorrect) {
         return res.status(400).json({message : "Invalid username or password"});
@@ -83,3 +83,7 @@ export const logout = (req, res) => {
     res.status(500).json({ message: "Server error" }); 
   }
 };
+
+export const updateProfile = async (req, res) => {
+   res.status(200).json({message: "Profile updated"});
+}
