@@ -63,7 +63,8 @@ export const login = async (req, res) => {
       return res.status(200).json({
         _id: user._id,
         fullName: user.fullName,
-        email: user.email
+        email: user.email,
+        profilePic: user.profilePic,
       });
     }else {
       return res.status(400).json({message : "Invalid username or password"});
@@ -88,20 +89,22 @@ export const logout = (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const {profilePic} = req.body;
-    const userId = req.user._id;
-
+    const userId = req.user._id;    
     if (!profilePic) {
       return res.status(400).json({message: "Profile picture is required"});
-    }
+    }    
     const uploadResponse = await cloudinary.uploader.upload(profilePic);
-    const updatedUser = await User.findByIdAndUpdate(userId, {profilePic: uploadResponse.secure_url}, {new: true});
+    const updatedUser = await User.findByIdAndUpdate(
+      userId, 
+      {profilePic: uploadResponse.secure_url}, 
+      {new: true}
+    );
     res.status(200).json(updatedUser);
 
   }catch(err) {
     console.error("Error in update controller : ", err);
     res.status(500).json({ message: "Internal Server error" }); 
   }
-   res.status(200).json({message: "Profile updated"});
 }
 
 export const checkAuth = (req, res) => {
